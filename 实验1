@@ -1,5 +1,5 @@
 #include <iostream>
-
+//using namespace std;
 const int MaxSize=256;
 //------------------
 class SeqList
