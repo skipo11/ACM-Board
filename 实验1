@@ -1,0 +1,112 @@
+#include <iostream>
+
+const int MaxSize=256;
+//------------------
+class SeqList
+{
+private:
+    int data[MaxSize];
+    int length;
+public:
+    SeqList(){length=0;}
+    SeqList(int a[],int n)
+    {
+        if(n>MaxSize) n=MaxSize;
+        for(int i=0;i<n;i++)
+        {
+            data[i]=a[i];
+        }
+        length=n;
+    }
+    ~SeqList(){}
+
+    void Insert(int i,int x)
+    {
+        if(i<1||i>length+1)
+        {
+            std::cout<<"段错误，请重新输入"<<std::endl;
+            return;
+        }
+        if(length+1>MaxSize)
+        {
+            std::cout<<"顺序表已满"<<std::endl;
+            return;
+        }
+        else 
+        {
+            for(int v=length;v>i-1;v--)
+            {
+                data[v]=data[v-1];
+            }
+            data[i-1]=x;
+            length++;
+        }
+    }
+    int Delete(int i)
+    {
+        if(i<1||i>length)
+        {
+            std::cout<<"段错误，请重新输入"<<std::endl;
+            return -1;
+        }
+        i--;
+        int value=data[i];
+        for(int v=i;v<length-1;v++)
+        {
+            data[v]=data[v+1];
+        }
+        length--;
+        return value;
+    }
+    int Locate(int x)
+    {
+        for(int i=0;i<length;i++)
+        {
+            if(data[i]==x)
+            {
+                return i+1;
+            }
+        }
+        return -1;
+    }
+    void PrintList()
+    {
+        if(length==0) std::cout<<"顺序表为空"<<std::endl;
+        for(int i=0;i<length;i++) std::cout<<data[i]<<" ";
+        if(length!=0) std::cout<<std::endl;
+    }
+};
+//----------------------------------------------------
+int main()
+{
+	std::cout<<"1.创建空顺序表"<<std::endl;
+    SeqList test1;
+    test1.PrintList();
+    test1.Delete(1);
+    std::cout<<"2.用数组初始化"<<std::endl;
+    int a[]={10,20,30,40,50};
+    SeqList test2(a,5);
+    test2.PrintList();
+
+    std::cout<<"3.顺序表插入"<<std::endl;
+    test2.Insert(1,5);
+    test2.PrintList();
+
+    test2.Insert(7,60);
+    test2.PrintList();
+
+    test2.Insert(10,100);//非法调试
+
+    std::cout<<"4.顺序表元素查找"<<std::endl;
+    std::cout<<"元素30的位置是:"<<test2.Locate(30)<<std::endl;
+    std::cout<<"元素999的位置是:"<<test2.Locate(999)<<std::endl;
+
+    std::cout<<"5.顺序表元素删除"<<std::endl;
+    int val=test2.Delete(4);
+    std::cout<<"被删除的元素是:"<<val<<std::endl;
+    test2.PrintList();
+
+    test2.Delete(100);
+
+	return 0;
+}
