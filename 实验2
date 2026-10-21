@@ -1,0 +1,113 @@
+#include <iostream>
+#include <deque>
+#include <vector>
+const int MaxSize=256;
+//------------------
+enum stackNumber {one,two};
+template <typename T>
+class dualStack
+{ public:
+        dualStack()
+        {
+        	count1=0;
+        	count2=0;
+		} 
+        void  push(const T& item,stackNumber n);
+        void  pop(stackNumber n);
+        T&  top(stackNumber n)  ;
+        bool  empty(stackNumber n)  const;
+        int  size(stackNumber n)  const;
+  private:
+        std::deque<T>  dualStackElements;
+        int  count1, count2;
+};
+//-------------------
+template <typename T>
+void dualStack<T>::push(const T& item,stackNumber n)
+{
+	if(n==one)
+	{
+		dualStackElements.push_front(item);
+		count1++;
+	}	
+	else
+	{
+		dualStackElements.push_back(item);
+		count2++;
+	}
+}
+
+template <typename T>
+bool  dualStack<T>::empty(stackNumber n)  const
+{
+	return (n==one&&!count1)||(n==two&&!count2);
+}
+
+template <typename T>
+void dualStack<T>::pop(stackNumber n)
+{
+	if(n==one)
+	{
+		if(count1>0) dualStackElements.pop_front();
+		else
+		{
+			std::cout<<"栈1为空"<<" ";
+			return;
+		}
+		count1--;
+	}	
+	else
+	{
+		if(count2>0) dualStackElements.pop_back();
+		else
+		{
+			std::cout<<"栈2为空"<<" ";
+			return;
+		}
+		count2--;
+	}
+}
+
+
+
+template <typename T>
+T&  dualStack<T>::top(stackNumber n)  
+{
+	//if(empty(n)) return -1;
+	return (n==one? dualStackElements.front():dualStackElements.back());
+}
+
+template <typename T>
+int dualStack<T>::size(stackNumber n)  const
+{
+	if(n==one) return count1;
+	else return count2;
+}
+ 
+//----------------------------------------------------
+int main()
+{
+	std::vector<int> a={1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+	dualStack<int> s;
+	for(int v:a)
+	{
+		if(v&1) s.push(v,one);
+		else s.push(v,two);
+	}
+	int count=0;
+	while(!s.empty(one)||!s.empty(two))
+	{
+		std::cout<<"第"<<(++count)<<"次弹出"<<":";
+		int x;
+		if(!s.empty(one)) x=s.top(one);
+		else x=-1;
+		s.pop(one);
+		if(x!=-1) std::cout<<x<<" ";
+		if(!s.empty(two)) x=s.top(two);
+		else x=-1;
+		s.pop(two);
+		if(x!=-1) std::cout<<x<<" ";
+		std::cout<<std::endl;
+	}
+	return 0;
+}
